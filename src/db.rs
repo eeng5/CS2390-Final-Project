@@ -1,3 +1,6 @@
+use dotenv::dotenv;
+use std::env;
+
 use std::ops::Deref;
 use rocket::http::Status;
 use rocket::request::{self, FromRequest};

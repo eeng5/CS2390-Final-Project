@@ -9,10 +9,12 @@
 #[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate diesel;
+#[macro_use] extern crate dotenv;
 extern crate r2d2;
 extern crate r2d2_diesel;
 
 // use serde_json::Value;
+// use rocket::config::Value;
 use rocket_contrib::json::{Json, JsonValue};
 
 mod db;
@@ -28,12 +30,12 @@ fn create(hero: Json<Hero>, connection: db::Connection) -> Json<Hero> {
 }
 
 #[get("/")]
-fn read(connection: db::Connection) -> Json<Value> {
+fn read(connection: db::Connection) -> JsonValue {
     Json(json!(Hero::read(&connection)))
 }
 
 #[put("/<id>", data = "<hero>")]
-fn update(id: i32, hero: Json<Hero>, connection: db::Connection) -> Json<Value> {
+fn update(id: i32, hero: Json<Hero>, connection: db::Connection) -> JsonValue {
     let update = Hero { id: Some(id), ..hero.into_inner() };
     Json(json!({
         "success": Hero::update(id, update, &connection)
@@ -41,7 +43,7 @@ fn update(id: i32, hero: Json<Hero>, connection: db::Connection) -> Json<Value> 
 }
 
 #[delete("/<id>")]
-fn delete(id: i32, connection: db::Connection) -> Json<Value> {
+fn delete(id: i32, connection: db::Connection) -> JsonValue {
     Json(json!({
         "success": Hero::delete(id, &connection)
     }))

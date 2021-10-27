@@ -16,6 +16,7 @@ diesel = { version = "1.0.0", features = ["mysql"] }
 diesel_codegen = { version = "*", features = ["mysql"] }
 r2d2 = "*"
 r2d2-diesel = "*"
+dotenv = "0.15.0"
 
 [dependencies.rocket_contrib]
 version = "*"
