@@ -1,12 +1,12 @@
 use diesel;
 use diesel::prelude::*;
 use diesel::mysql::MysqlConnection;
-use schema::heroes;
+use crate::schema::heroes;
 
+#[derive(Serialize, Deserialize, Queryable, Insertable, AsChangeset)]
 #[table_name = "heroes"]
-#[derive(Serialize, Deserialize, Queryable, Insertable)]
 pub struct Hero {
-    pub id: Option<i32>,
+    pub id: i32,
     pub name: String,
     pub identity: String,
     pub hometown: String,
@@ -28,7 +28,7 @@ impl Hero {
     }
 
     pub fn update(id: i32, hero: Hero, connection: &MysqlConnection) -> bool {
-        diesel::update(heroes::table.find(id)).set(&hero).execute(connection).is_ok()
+        diesel::update(heroes::table.find(id)).set(hero).execute(connection).is_ok()
     }
 
     pub fn delete(id: i32, connection: &MysqlConnection) -> bool {

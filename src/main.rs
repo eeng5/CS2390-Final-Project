@@ -25,28 +25,28 @@ use hero::{Hero};
 
 #[post("/", data = "<hero>")]
 fn create(hero: Json<Hero>, connection: db::Connection) -> Json<Hero> {
-    let insert = Hero { id: None, ..hero.into_inner() };
+    let insert = Hero { ..hero.into_inner() };
     Json(Hero::create(insert, &connection))
 }
 
 #[get("/")]
 fn read(connection: db::Connection) -> JsonValue {
-    Json(json!(Hero::read(&connection)))
+    json!(Hero::read(&connection))
 }
 
 #[put("/<id>", data = "<hero>")]
 fn update(id: i32, hero: Json<Hero>, connection: db::Connection) -> JsonValue {
-    let update = Hero { id: Some(id), ..hero.into_inner() };
-    Json(json!({
+    let update = Hero { id: id, ..hero.into_inner() };
+    json!({
         "success": Hero::update(id, update, &connection)
-    }))
+    })
 }
 
 #[delete("/<id>")]
 fn delete(id: i32, connection: db::Connection) -> JsonValue {
-    Json(json!({
+    json!({
         "success": Hero::delete(id, &connection)
-    }))
+    })
 }
 
 // #[get("/")]
@@ -59,5 +59,6 @@ fn main() {
         .manage(db::connect())
         .mount("/hero", routes![create, update, delete])
         .mount("/heroes", routes![read])
+        .mount("/", routes![create, read, update, delete])
         .launch();
 }
